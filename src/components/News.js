@@ -84,7 +84,7 @@ const News = (props) => {
 News.defaultProps = {
   country: "in",
   pageSize: 8,
-  category: "general",
+  category: 'general',
 };
 
 News.propTypes = {
