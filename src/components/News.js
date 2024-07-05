@@ -4,7 +4,7 @@ import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const News = ({ title = 'Default Title', content = 'Default Content', country, category, apiKey, pageSize, setProgress }) => {
+const News = ({ title = 'Default Title', content = 'Default Content', country = 'in', category = 'general', apiKey, pageSize = 8, setProgress }) => {
   
   const [articles, setArticles]= useState([])
   const [loading, setLoading]= useState(true)
@@ -17,7 +17,7 @@ const News = ({ title = 'Default Title', content = 'Default Content', country, c
 
   const updateNews = async () => {
     setProgress(10);
-    const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
+    const url = `/newsapi/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
     setLoading(true);
     let data = await fetch(url);
     setProgress(30);
@@ -36,7 +36,7 @@ const News = ({ title = 'Default Title', content = 'Default Content', country, c
   }, [])
 
   const fetchMoreData = async () => {
-    const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page+1}&pageSize=${pageSize}`;
+    const url = `/newsapi/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page+1}&pageSize=${pageSize}`;
     setPage(page+1)
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -81,16 +81,13 @@ const News = ({ title = 'Default Title', content = 'Default Content', country, c
     );
 }
 
-News.defaultProps = {
-  country: "in",
-  pageSize: 8,
-  category: 'general',
-};
 
 News.propTypes = {
   country: PropTypes.string,
   pageSize: PropTypes.number,
   category: PropTypes.string,
+  apiKey: PropTypes.string.isRequired,
+  setProgress: PropTypes.func.isRequired,
 };
 
 export default News;
