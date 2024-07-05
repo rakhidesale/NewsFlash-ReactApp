@@ -19,29 +19,39 @@ const News = ({ title = 'Default Title', content = 'Default Content', country = 
     setProgress(10);
     const url = `/newsapi/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
     setLoading(true);
-    let data = await fetch(url);
-    setProgress(30);
-    let parsedData = await data.json();
-    setProgress(70);
-    setArticles(parsedData.articles)
-    setTotalResults(parsedData.totalResults)
-    setLoading(false)
-    setProgress(100);
-  }
+    try {
+      let data = await fetch(url);
+      setProgress(30);
+      let parsedData = await data.json();
+      console.log(parsedData); // Log the response
+      setProgress(70);
+      setArticles(parsedData.articles);
+      setTotalResults(parsedData.totalResults);
+      setLoading(false);
+      setProgress(100);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     document.title = `${capitalizeFirstLetter(category)} - NewsFlash`;
     updateNews();
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
   const fetchMoreData = async () => {
     const url = `/newsapi/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page+1}&pageSize=${pageSize}`;
     setPage(page+1)
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    setArticles(articles.concat(parsedData.articles))
-    setTotalResults(parsedData.totalResults)
+    try {
+      let data = await fetch(url);
+      let parsedData = await data.json();
+      setArticles(articles.concat(parsedData.articles));
+      setTotalResults(parsedData.totalResults);
+    }catch(error){
+      console.error("Error fetching data:", error);
+    }
   };
 
     return (
